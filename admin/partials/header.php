@@ -23,6 +23,8 @@ $activePage = basename($_SERVER["PHP_SELF"], ".php");
     <script src="../bootstrap/js/bootstrap.bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/chart.js" defer></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/decoupled-document/ckeditor.js"></script>
+    <script src="../js/admin.js" defer></script>
 </head>
 
 <body>
