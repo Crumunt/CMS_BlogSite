@@ -2,6 +2,24 @@
 
 require 'connection.php';
 
+$files = glob('../assets/blog-assets/*');
+
+$data = showRecords($conn, 'tbl_blogs');
+
+$imageInUse = [];
+
+foreach($data as $image) {
+    array_push($imageInUse, $image[2]);
+}
+
+foreach($files as $file) {
+    $file_name = end(explode('/',$file));
+
+    if(!in_array($file_name, $imageInUse)) {
+        unlink($file);
+    }
+}
+
 // THIS FILE IS FOR ALL RELATED FUNCTIONS THAT CAN BE USED IN THE ENTIRE PROJECT
 
 function sqlExecute($conn, $sql)
@@ -59,6 +77,9 @@ function updateQuery($conn, $data, $tbl, $id)
     $primary_key = array_keys($id)[0];
     $key_value = $id[$primary_key];
     $sql = "UPDATE $tbl SET {$update} WHERE $primary_key = $key_value";
+
+    echo $sql;
+
     return mysqli_query($conn, $sql);
 }
 

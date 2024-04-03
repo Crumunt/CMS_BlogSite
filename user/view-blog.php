@@ -1,15 +1,32 @@
-<?php include "partials/header.html"; ?>
+<?php
+require "../db/action.php";
+include "partials/header.html";
+
+$blog_id = $_GET['blog_id'] ?? NULL;
+
+if($blog_id == NULL) {
+	header('location: index.php?error=404(blogNotFound)');
+	exit();
+}
+
+$data = showRecords($conn, 'tbl_blogs', "id=$blog_id");
+
+$date = date_create($date[0][5]);
+
+?>
 <div class="container">
 	<div class="blog-wrapper border p-5 p-3 shadow mt-5" id="blogViewWrapper">
 		<div class="header border-5 border-black border-bottom">
-			<h6 class="text-black-50">Travel | Mar 29 2024</h6>
-			<h1 class="pb-2">Lorem ipsum dolor, sit amet consectetur, adipisicing elit. Amet, sint.</h1>
+			<h6 class="text-black-50"><?=(($data[0][4] != '') ? $data[0][4]: "No category")?> | <?= date_format($date, "M d, Y. H:i a") ?></h6>
+			<h1 class="pb-2"><?=$data[0][1]?></h1>
 		</div>
 		<div class="thumbnail mt-3 shadow">
-			<img src="../assets/pexels-christian-heitz-842711.jpg" class="w-100" alt="">
+			<img src="../assets/blog-assets/<?=$data[0][2]?>" class="w-100" alt="">
 		</div>
-		<div class="blog-text mt-3">
-			<p class="text-justify lh-lg fs-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente repellat nesciunt nostrum consequatur culpa veniam mollitia placeat in praesentium deleniti sunt, recusandae cum voluptatibus cupiditate aliquam dignissimos optio neque voluptatum omnis dicta. In fuga aspernatur ipsum exercitationem suscipit ratione qui voluptate incidunt tempora nam. Veritatis distinctio quam mollitia aliquid eligendi, modi ipsum amet quia assumenda, maxime obcaecati minima sed architecto dolorem consequuntur vero minus quod nobis necessitatibus fuga commodi dicta doloribus! Vero, veniam excepturi rerum amet quos repudiandae ipsa animi! Ex pariatur vero similique maiores quo dignissimos repellat. Vitae quis, inventore aliquid nulla minima sapiente repellendus quo consectetur in, dolor provident sint fugiat ex? Facilis nam harum iure omnis, voluptates aut dolorem inventore ab id nobis deserunt. Quod, odio tempore cumque! Eum quos recusandae quasi, ut quo atque aspernatur asperiores, possimus provident aliquid nobis exercitationem blanditiis iusto! Quas, eum. Modi officiis ducimus eligendi molestiae dolor possimus dolores perspiciatis voluptates sit ea aut accusantium, eum provident, minima et debitis facilis tempora error iste vitae? Veniam sed temporibus soluta, harum ratione ullam magnam dignissimos laborum. Voluptatem accusantium magnam suscipit enim reiciendis aliquam assumenda, praesentium, ipsam officia omnis, rem laborum molestiae asperiores earum rerum, quas repudiandae placeat mollitia natus eveniet deserunt cum deleniti? Rerum perferendis aut quibusdam exercitationem quae debitis, excepturi eligendi odit nemo delectus neque blanditiis, error officiis quas nobis accusamus cupiditate placeat? Adipisci quae eius, pariatur. Molestiae ratione facere soluta exercitationem facilis, perspiciatis a ex natus dignissimos vitae odit fuga quas vel harum adipisci dicta, laudantium numquam. Esse praesentium expedita veniam omnis, odio dicta nemo amet. Neque reprehenderit modi, quam sapiente accusamus excepturi dolorem voluptas a maiores ipsum praesentium voluptates eaque, magnam numquam ducimus, temporibus! Officiis corporis ab voluptate aliquid animi excepturi ea blanditiis ratione accusantium commodi necessitatibus eveniet quibusdam, aut, rem cumque, molestias enim maxime pariatur labore unde officia tempore ex eum perspiciatis. Nobis at molestias a voluptatem dolorem nihil deleniti reprehenderit quos iusto corrupti tenetur, laborum sed, provident consectetur eaque itaque aliquid quae eum. Harum, soluta totam, consequatur doloremque officia, non et esse, in distinctio repellat tenetur. Quas labore, similique quisquam harum a doloribus dolores incidunt, repellendus sint ab sequi eaque exercitationem vitae possimus quos aliquam nesciunt veniam! Magnam ratione odio aut blanditiis, aspernatur, animi cupiditate, assumenda quasi consequuntur vel molestiae quo maxime officiis repellendus quam temporibus asperiores. Numquam voluptatem ab dicta libero ad dolorum at, veniam dolorem nam, iste adipisci, odio porro. Maxime voluptatem, earum similique exercitationem quaerat reprehenderit amet doloremque aliquam veniam! Illum nulla minus omnis non nobis! Tempore laboriosam illo quidem reiciendis incidunt alias a fugit quo labore minus, quaerat natus at dicta provident adipisci, vitae atque earum unde laudantium voluptates temporibus aspernatur sed? Rerum, esse. Perspiciatis in nisi tenetur eligendi eaque officiis cupiditate sint totam vitae animi quo, soluta, at doloribus quibusdam quam! Porro aliquam voluptates iusto pariatur eveniet sint blanditiis dolor sapiente veritatis mollitia nobis voluptatibus similique fugit nulla omnis, cupiditate ullam, autem, quia, nemo? Quasi ratione nesciunt perferendis consequuntur aspernatur eos? Officia id dicta molestiae velit mollitia commodi dolorum, esse unde nam, tenetur!</p>
+		<div class="blog-text mt-5">
+			<div class="fs-5">
+				<?= $data[0][3] ?>
+			</div>
 		</div>
 	</div>
 	<div class="button-wrapper d-flex justify-content-between gap-2 mt-5">

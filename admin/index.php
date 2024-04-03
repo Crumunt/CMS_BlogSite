@@ -1,4 +1,5 @@
 <?php
+  // require "../db/action.php";
   include "partials/header.php";
 ?>
 

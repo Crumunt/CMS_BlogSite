@@ -23,8 +23,10 @@ $activePage = basename($_SERVER["PHP_SELF"], ".php");
     <script src="../bootstrap/js/bootstrap.bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/chart.js" defer></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/decoupled-document/ckeditor.js"></script>
     <script src="../js/admin.js" defer></script>
+    
+    <!-- CKEDITOR CDN -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/decoupled-document/ckeditor.js"></script>
 </head>
 
 <body>
@@ -37,7 +39,7 @@ $activePage = basename($_SERVER["PHP_SELF"], ".php");
                 </button>
                 <div class="offcanvas offcanvas-start text-white" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                     <div class="offcanvas-header">
-                        <img src="../assets/logo.png" alt="">
+                        <img src="../assets/logo.png" alt="" class="logo-icon">
                         <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Hi Admin!</h5>
                         <button type="button" class="btn-close bg-light" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
@@ -48,6 +50,9 @@ $activePage = basename($_SERVER["PHP_SELF"], ".php");
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-white fs-3 <?= ($activePage == 'manage-post') ? "active" : "" ?>" href="manage-post.php">Manage Posts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="manage-categories.php" class="nav-link text-white fs-3 <?= ($activePage == 'manage-categories') ? "active" : "" ?>" aria-current="page">Manage Categories</a>
                             </li>
                             <li class="nav-item">
                                 <a href="manage-users.php" class="nav-link text-white fs-3 <?= ($activePage == 'manage-users') ? "active" : "" ?>" aria-current="page">Manage Users</a>

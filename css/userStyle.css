@@ -8,6 +8,10 @@
     --bg-card-view: #F8E5D7;
 }
 
+* {
+    /* font-family: 'Poppins', sans-serif; */
+}
+
 body {
     background-color: var(--bg-body) !important;
     overflow-x: hidden;
@@ -44,6 +48,18 @@ nav a {
     background-color: var(--bg-card) !important;
 }
 
+.card__preview {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 4 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
 img {
     object-fit: cover;
 }
@@ -71,10 +87,20 @@ img {
     background-color: var(--bg-card-view) !important;
 }
 
-.thumbnail {
-    z-index: -1;
-}
-
 .thumbnail img {
     max-height: 550px !important;
+}
+
+figure.image {
+    width: 100% !important;
+}
+
+figure.image > img {
+    max-height: 650px !important;
+    width: 100% !important;
+}
+
+blockquote {
+    border-left: solid !important;
+    padding-left: 1rem;
 }
