@@ -10,33 +10,8 @@
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add Category</button>
             </div>
 
-            <!-- Modal -->
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog" id="categoryModal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Add category</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="" method="post" id="categoryForm" onsubmit="event.preventDefault()">
-                                <div class="form-group mb-3">
-                                    <label for="" class="form-label">Category Name</label>
-                                    <input type="text" name="category_name" id="category_name" class="form-control">
-                                    <div class="invalid-feedback">
-                                        Category has already been added.
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" id="saveButton" onclick="addCategory()">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <?php include "partials/modal.php"; ?>
+            
             <div class="col-lg-4 col-sm-11">
                 <input type="search" name="" id="" placeholder="Search by id or name" class="form-control">
             </div>

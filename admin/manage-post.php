@@ -7,8 +7,8 @@
     <div class="row d-flex justify-content-between align-items-center rounded-2 gap-2 p-3 shadow" id="postHeader">
       <div class="col-lg-7 col-sm-10 d-flex gap-2">
         <h1 class="text-uppercase text-white">Manage Posts</h1>
-
-        <?php include "partials/post_modal.php"; ?>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">ADD POST</button>
+        <?php include "partials/modal.php"; ?>
       </div>
       <div class="col-lg-4 col-sm-11">
         <input type="search" name="" id="" placeholder="Search by name or category" class="form-control">

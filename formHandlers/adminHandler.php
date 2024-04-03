@@ -17,6 +17,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		loadBlog($conn);
 	} elseif (isset($_POST['updateBlog'])) {
 		updateBlog($conn);
+	}elseif(isset($_POST['confirmDelete'])) {
+		loadBlog($conn);
+	}elseif(isset($_POST['finalizeDelete'])) {
+		deleteBlog($conn);
 	}
 }
 
@@ -37,7 +41,7 @@ function generateCards($conn)
 						<button class="btn btn-warning" value="<?= $blog_content[0] ?>" onclick="loadBlog(this.value)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 							Edit
 						</button>
-						<a href="#!" class="btn btn-danger">Delete</a>
+						<button class="btn btn-danger" value="blog_id=<?= $blog_content[0] ?>" onclick="confirmMessage(this.value)" data-bs-toggle="modal" data-bs-target="#confirmDelete">Delete</button>
 					</div>
 				</div>
 			</div>
@@ -70,7 +74,6 @@ function uploadBlog($conn)
 
 		if ($action) {
 			echo "Blog has been added successfully";
-			var_dump($image);
 			exit();
 		} else {
 			echo "There was an error uploading the blog, please try again.";
@@ -194,7 +197,9 @@ function updateBlog($conn)
 
 	$image = processImage();
 
-	$data['blog_thumbnail'] = (isset($image)) ? $image: '';
+	if(!empty($image)) {
+		$data['blog_thumbnail'] = $image;
+	}
 
 	try {
 		updateQuery($conn, $data, 'tbl_blogs', ['id' => $blog_id]);

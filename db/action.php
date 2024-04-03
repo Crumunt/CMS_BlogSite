@@ -78,8 +78,6 @@ function updateQuery($conn, $data, $tbl, $id)
     $key_value = $id[$primary_key];
     $sql = "UPDATE $tbl SET {$update} WHERE $primary_key = $key_value";
 
-    echo $sql;
-
     return mysqli_query($conn, $sql);
 }
 

@@ -86,7 +86,8 @@ function saveData() {
 		if (this.readyState == 4) {
 			resetForm()
 			loadContents();
-			console.log(this.responseText);
+			// console.log(this.responseText);
+			getFormData('confirmMessage').textContent = this.responseText;
 		}
 	}
 
@@ -164,8 +165,6 @@ function updateBlog(buttonValue) {
 
 	let blog_id = buttonValue
 
-	let processedImageFile = processImageFileInput(getFormData('thumbnail'));
-
 	let data = new FormData()
 
 	data.append('updateBlog', 'update')
@@ -174,14 +173,20 @@ function updateBlog(buttonValue) {
 	data.append('category_name', getFormData('category_name').value)
 	data.append('blog_content', editor.getData())
 
-	if (processedImageFile.length > 0) {
-		data.append('blog_thumbnail', processedImageFile[0], processedImageFile[1])
+	let fileInput = getFormData('thumbnail');
+
+	if (fileInput.files.length > 0) {
+
+		let updateImageFile = processImageFileInput(fileInput);
+
+		data.append('blog_thumbnail', updateImageFile[0], updateImageFile[1])
 	}
 
 	let xhr = new XMLHttpRequest();
 
-	xhr.onreadystatechange = function() {
-		if(this.readyState == 4) {
+	xhr.onreadystatechange = function () {
+		if (this.readyState == 4) {
+			getFormData('confirmMessage').textContent = this.responseText
 			console.log(this.responseText)
 			loadContents();
 		}
@@ -194,10 +199,6 @@ function updateBlog(buttonValue) {
 
 function processImageFileInput(fileInput) {
 
-	if(fileInput.files.length == 0) return
-
-	console.log(fileInput.files.length)
-
 	let file = fileInput.files[0]
 
 	let fileValues = file.name
@@ -205,11 +206,70 @@ function processImageFileInput(fileInput) {
 	console.log([file, fileValues].length)
 
 	return [file, fileValues]
+
 }
 
 function resetForm() {
 
 	getFormData('formData').reset();
 	editor.setData('');
+
+	if (getFormData('modalStatus').textContent == 'Update Post') {
+		getFormData('modalStatus').textContent = 'Add Post'
+		getFormData('editorController').textContent = 'Save';
+		getFormData('editorController').removeAttribute('value')
+		getFormData('editorController').setAttribute('onclick', 'saveData()')
+	}
+
+}
+
+function confirmMessage(id) {
+
+	let toDeleteId = id.split("=")[1];
+
+	let data = new FormData();
+
+	data.append('confirmDelete', 'confirm');
+	data.append('blog_id', toDeleteId);
+
+	let xhr = new XMLHttpRequest()
+
+	xhr.onreadystatechange = function() {
+		if(this.readyState == 4) {
+			let data = JSON.parse(this.responseText)
+
+			getFormData('confirmDeleteButton').setAttribute('value', data[0][0]);
+			getFormData('toDeleteName').textContent = data[0][1];
+		}
+	}
+
+	xhr.open("POST", "/labFiles/blog_page/formHandlers/adminHandler.php", true);
+
+	xhr.send(data);
+
+}
+
+function deleteRecord(id) {
+
+	let data = new FormData();
+
+	data.append('finalizeDelete', 'delete')
+	data.append('blog_id', id);
+
+	console.log(id)
+
+	let xhr = new XMLHttpRequest();
+
+	xhr.onreadystatechange = function() {
+		if(this.readyState == 4) {
+			getFormData('confirmMessage').textContent = this.responseText
+			console.log(this.responseText)
+			loadContents();
+		}
+	}
+
+	xhr.open("POST", "/labFiles/blog_page/formHandlers/adminHandler.php", true);
+
+	xhr.send(data);
 
 }
