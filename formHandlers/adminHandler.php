@@ -7,20 +7,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	if (isset($_POST['loadBlogs'])) {
 		generateCards($conn);
-	} elseif (isset($_POST['uploadBlog'])) {
-		uploadBlog($conn);
-	} elseif (isset($_POST['addCategory'])) {
-		addCategory($conn);
+	} elseif (isset($_POST['uploadContent'])) {
+		uploadContent($conn);
 	} elseif (isset($_POST['loadCategories'])) {
 		loadCategories($conn);
-	} elseif (isset($_POST['loadBlog'])) {
-		loadBlog($conn);
-	} elseif (isset($_POST['updateBlog'])) {
-		updateBlog($conn);
-	}elseif(isset($_POST['confirmDelete'])) {
-		loadBlog($conn);
-	}elseif(isset($_POST['finalizeDelete'])) {
-		deleteBlog($conn);
+	} elseif (isset($_POST['loadContent'])) {
+		loadContent($conn);
+	} elseif (isset($_POST['updateContent'])) {
+		updateContent($conn);
+	} elseif (isset($_POST['confirmDelete'])) {
+		loadContent($conn);
+	} elseif (isset($_POST['finalizeDelete'])) {
+		deleteContent($conn);
 	}
 }
 
@@ -34,14 +32,14 @@ function generateCards($conn)
 ?>
 			<div class="col-xl-3 col-lg-4 col-md-5 col-sm-10">
 				<div class="card shadow">
-					<img src="../assets/blog-assets/<?= $blog_content[2] ?>" class="card-img-top" alt="Fissure in Sandstone" />
+					<img src="../assets/blog-assets/<?= $blog_content[2] ?>" class="card-img-top" alt="<?= $blog_content[1] ?> Thumbnail" />
 					<div class="card-body">
 						<h5 class="card-title border-bottom text-truncate"><?= $blog_content[1] ?></h5>
 						<p class="card-text text-secondary"><?= $blog_content[4] ?> &bullet; </p>
-						<button class="btn btn-warning" value="<?= $blog_content[0] ?>" onclick="loadBlog(this.value)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+						<button class="btn btn-warning" value="<?= $blog_content[0] ?>" onclick="loadContent(this)" aria-label="blogs" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 							Edit
 						</button>
-						<button class="btn btn-danger" value="blog_id=<?= $blog_content[0] ?>" onclick="confirmMessage(this.value)" data-bs-toggle="modal" data-bs-target="#confirmDelete">Delete</button>
+						<button class="btn btn-danger" value="<?= $blog_content[0] ?>" aria-label="blogs" onclick="confirmMessage(this)" data-bs-toggle="modal" data-bs-target="#confirmDelete">Delete</button>
 					</div>
 				</div>
 			</div>
@@ -52,28 +50,41 @@ function generateCards($conn)
 	}
 }
 
-function uploadBlog($conn)
+function uploadContent($conn)
 {
 
+	// array with names containing values to skip in foreach loop
+	$flagNames = ['uploadContent', 'blog_thumbnail', 'table_label'];
+
+	// array containing names where there is a possibility of content containing a single apostrophe
+	$replaceNames = ['blog_content', 'blog_title', 'category_name'];
+
 	$data = [];
-	// $data = $_POST['data'];
 	foreach ($_POST as $name => $value) {
-		if ($name != 'uploadBlog' && $name != 'blog_thumbnail') {
-			$data[$name] = ($name == 'blog_content' || 'blog_title') ? str_replace("'", "\'", $value) : $value;
+		if (!in_array($name, $flagNames)) {
+			$data[$name] = (in_array($name, $replaceNames)) ? str_replace("'", "\'", $value) : $value;
 		}
 	}
 
 	$image = processImage();
 
-	if(!empty($image)) {
+	if (!empty($image)) {
 		$data['blog_thumbnail'] = $image;
 	}
 
+	$table = "tbl_" . $_POST['table_label'];
+
 	try {
-		$action = addQuery($conn, $data, 'tbl_blogs');
+		$action = addQuery($conn, $data, $table);
 
 		if ($action) {
-			echo "Blog has been added successfully";
+
+			if ($_POST['table_label'] == 'blogs') {
+				echo "Blog has been added successfully";
+			} else {
+				echo "Category has been added successfully";
+			}
+
 			exit();
 		} else {
 			echo "There was an error uploading the blog, please try again.";
@@ -129,7 +140,6 @@ function addCategory($conn)
 		exit();
 	}
 
-
 	try {
 		$checkDuplication = showRecords($conn, 'tbl_categories', "category_name = '$category'");
 
@@ -156,8 +166,8 @@ function loadCategories($conn)
 			<tr>
 				<th><?= $category[1] ?></th>
 				<td>
-					<button class="btn btn-warning">Edit</button>
-					<button class="btn btn-danger">Delete</button>
+					<button class="btn btn-warning" value="<?= $category[0] ?>" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="loadContent(this)" aria-label="categories">Edit</button>
+					<button class="btn btn-danger" value="<?= $category[0] ?>" onclick="confirmMessage(this)" aria-label="categories" data-bs-toggle="modal" data-bs-target="#confirmDelete">Delete</button>
 				</td>
 			</tr>
 
@@ -168,59 +178,73 @@ function loadCategories($conn)
 	}
 }
 
-function loadBlog($conn)
+function loadContent($conn)
 {
 
-	$blog_id = $_POST['blog_id'] ?? NULL;
+	$contentID = $_POST['content_id'] ?? NULL;
 
+	if ($contentID == NULL) return "Content not Found";
 
-	if ($blog_id == NULL) return "Blog not Found";
+	$table = "tbl_" . $_POST['table_label'];
+	// echo $table;
 
-	$data = showRecords($conn, 'tbl_blogs', "id = $blog_id");
+	try {
+		$data = showRecords($conn, $table, "id = $contentID");
+	} catch (Exception $e) {
+		echo "Error: " . $e;
+	}
 
 	// turn data into json
 	echo json_encode($data);
 }
 
-function updateBlog($conn)
+function updateContent($conn)
 {
 
-	$blog_id = $_POST['blog_id'];
+	$content_id = $_POST['content_id'];
+
+	$flagNames = ['updateContent','content_id', 'blog_thumbnail', 'table_label'];
+
+	$replaceNames = ['blog_content', 'blog_title', 'category_name'];
 
 	$data = [];
 
 	foreach ($_POST as $name => $value) {
-		if ($name != 'updateBlog' && $name != 'blog_thumbnail' && $name != 'blog_id') {
-			$data[$name] = ($name == 'blog_content' || 'blog_title') ? str_replace("'", "\'", $value) : $value;
+		if (!in_array($name, $flagNames)) {
+			$data[$name] = (in_array($name, $replaceNames)) ? str_replace("'", "\'", $value) : $value;
 		}
 	}
 
 	$image = processImage();
 
-	if(!empty($image)) {
+	if (!empty($image)) {
 		$data['blog_thumbnail'] = $image;
 	}
 
+	$table = "tbl_" . $_POST['table_label'];
+
 	try {
-		updateQuery($conn, $data, 'tbl_blogs', ['id' => $blog_id]);
+		updateQuery($conn, $data, $table, ['id' => $content_id]);
 	} catch (Exception $e) {
 		echo "Error: " . $e;
 		exit();
 	}
 
-	echo "Blog has been updated";
+	echo "Update Successful";
 }
 
-function deleteBlog($conn) {
+function deleteContent($conn)
+{
 
-	$blog_id = $_POST['blog_id'];
+	$content_id = $_POST['content_id'];
+
+	$table = "tbl_" . $_POST['table_label'];
 
 	try {
-		deleteQuery($conn, 'tbl_blogs', ['id' => $blog_id]);
+		deleteQuery($conn, $table, ['id' => $content_id]);
 	} catch (Exception $e) {
 		echo 'Error' . $e;
 	}
 
-	echo "Blog has been successfully deleted";
-
+	echo "Content has been successfully deleted";
 }

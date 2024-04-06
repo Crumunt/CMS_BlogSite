@@ -48,6 +48,7 @@ function showRecords($conn, $tbl, $where = null)
     if ($where != null) {
         $sql .= " WHERE $where";
     }
+
     return sqlExecute($conn, $sql);
 }
 
@@ -87,5 +88,6 @@ function deleteQuery($conn, $tbl, $id)
     $primary_key = array_keys($id)[0];
     $key_value = $id[$primary_key];
     $sql = "DELETE FROM $tbl WHERE $primary_key = $key_value";
+
     return mysqli_query($conn, $sql);
 }

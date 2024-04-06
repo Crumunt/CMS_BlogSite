@@ -8,7 +8,6 @@ include "partials/header.php";
         <div class="row d-flex justify-content-evenly align-items-center rounded-2 gap-2 p-3 shadow" id="postHeader">
             <div class="col-lg-7 col-md-11 col-sm-11 d-flex align-items-center gap-2">
                 <h1 class="text-uppercase text-white d-inline">Manage Users</h1>
-                <button class="btn btn-success mb-1" data-bs-toggle="tooltip" title="Add User">Add User</button>
             </div>
             <div class="col-lg-4 col-md-11 col-sm-11 d-flex">
                 <input type="search" name="" id="" placeholder="Search by name or id" class="form-control">

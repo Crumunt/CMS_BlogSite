@@ -11,7 +11,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-warning" data-bs-dismiss="modal">Cancel</button>
-        <button class="btn btn-success" id="confirmDeleteButton" data-bs-target="#confirmationModal" data-bs-toggle="modal" onclick="deleteRecord(this.value)">Confirm</button>
+        <button class="btn btn-success" id="confirmDeleteButton" data-bs-target="#confirmationModal" data-bs-toggle="modal" onclick="deleteRecord(this)">Confirm</button>
       </div>
     </div>
   </div>
@@ -74,8 +74,10 @@ function loadModal($conn)
               </div>
             </div>
             <div class="button-group d-flex gap-2 justify-content-end">
-              <button class="btn btn-warning modal-button" data-bs-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-success modal-button" id="editorController" data-bs-toggle="modal" data-bs-target="#confirmationModal" onclick="saveData()">Save</button>
+              <button class="btn btn-warning modal-button" data-bs-dismiss="modal" onclick="resetForm('blogs')">Cancel</button>
+              <button type="submit" class="btn btn-success modal-button" id="editorController" data-bs-toggle="modal" data-bs-target="#confirmationModal" onclick="saveData()" aria-label="blogs">
+                Save
+              </button>
             </div>
           </form>
         </div>
@@ -87,11 +89,11 @@ function loadModal($conn)
     <div class="modal-dialog" id="categoryModal">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">Add category</h1>
+          <h1 class="modal-title fs-5" id="modalStatus">Add category</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="" method="post" id="categoryForm" onsubmit="event.preventDefault()">
+          <form action="" method="post" id="formData" onsubmit="event.preventDefault()">
             <div class="form-group mb-3">
               <label for="" class="form-label">Category Name</label>
               <input type="text" name="category_name" id="category_name" class="form-control">
@@ -102,8 +104,11 @@ function loadModal($conn)
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="saveButton" onclick="addCategory()">Save</button>
+          <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="resetForm('categories')">Cancel</button>
+          <button type="button" class="btn btn-success" id="editorController" onclick="saveData()"
+           data-bs-toggle="modal" data-bs-target="#confirmationModal" aria-label="categories">
+           Save
+          </button>
         </div>
       </div>
     </div>

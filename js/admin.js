@@ -2,7 +2,7 @@ let editor;
 
 const MODAL = document.getElementById('formData')
 
-if (MODAL) {
+if (MODAL.getAttribute('enctype')) {
 
 	MODAL.addEventListener('onload', showEditor())
 
@@ -61,22 +61,20 @@ function getFormData(id) {
 
 function saveData() {
 
-	// process file input and return relevant information such as the object and its details
-	let processedImageFile = processImageFileInput(getFormData('thumbnail'))
-
 	// instantiate new FormData to store key value pairs
 	let data = new FormData();
 
-	// add key value pairs for each item in the form
-	data.append('uploadBlog', 'uploadBlog');
+	let tbl_label = getFormData('editorController').getAttribute('aria-label');
 
-	data.append('blog_title', getFormData('blog_title').value)
+	data.append('uploadContent', 'saveData');
 
-	data.append('blog_thumbnail', processedImageFile[0], processImageFileInput[1])
+	if (tbl_label == 'blogs') {
+		getBlogInput(data)
+	} else {
+		data.append('category_name', getFormData('category_name').value);
+	}
 
-	data.append('category_name', getFormData('category_name').value)
-
-	data.append('blog_content', editor.getData())
+	data.append('table_label', tbl_label)
 
 	// create new XMLHttpRequest
 	let xhr = new XMLHttpRequest();
@@ -84,74 +82,100 @@ function saveData() {
 	// check if readystate has changed, run function if so
 	xhr.onreadystatechange = function () {
 		if (this.readyState == 4) {
-			resetForm()
+
+			if (tbl_label == 'categories') {
+				if (this.responseText == 'error') {
+					getFormData('category_name').classList.add('is-invalid')
+					return;
+				}
+
+				getFormData('category_name').classList.remove('is-invalid')
+			}
+
+			resetForm(tbl_label)
+
 			loadContents();
-			// console.log(this.responseText);
 			getFormData('confirmMessage').textContent = this.responseText;
+
+			console.log(this.responseText)
 		}
 	}
 
 	// open url to send data
 	xhr.open('POST', '/labFiles/blog_page/formHandlers/adminHandler.php', true);
+
 	// send FormData variable
 	xhr.send(data)
 }
 
-function addCategory() {
+function getBlogInput(data) {
 
-	let data = new FormData();
+	// process file input and return relevant information such as the object and its details
+	let processedImageFile = processImageFileInput(getFormData('thumbnail'))
 
-	data.append('addCategory', 'add');
-	data.append('category_name', getFormData('category_name').value)
+	// add key value pairs for each item in the form
 
-	console.log(data);
+	data.append('blog_title', getFormData('blog_title').value)
 
-	let xhr = new XMLHttpRequest();
-
-	xhr.onreadystatechange = function () {
-		if (this.readyState == 4) {
-			getFormData('category_name').value = ''
-
-			if (this.responseText == 'error') {
-				getFormData('category_name').classList.add('is-invalid')
-				return;
-			}
-
-			getFormData('category_name').classList.remove('is-invalid')
-
-			loadContents();
-		}
+	if (processedImageFile !== null) {
+		data.append('blog_thumbnail', processedImageFile[0], processImageFileInput[1])
 	}
 
-	xhr.open('POST', '/labFiles/blog_page/formHandlers/adminHandler.php', true);
-	xhr.send(data);
+	data.append('category_name', getFormData('category_name').value)
+
+	data.append('blog_content', editor.getData())
+
 }
 
 
-function loadBlog(button) {
+function loadContent(button) {
 
-	let blog_id = button
+	let modalHeader = null
+	let table_label = null
+
+	let editableContent = button.getAttribute('aria-label');
+
+	if (editableContent == 'blogs') {
+		table_label = 'blogs'
+		modalHeader = 'Update Blog'
+	} else {
+		table_label = 'categories'
+		modalHeader = 'Update Category'
+	}
+
+	let contentID = button.value
+
+	console.log(contentID)
 
 	let data = new FormData()
 
-	data.append("loadBlog", "load");
-	data.append("blog_id", blog_id);
+	data.append("loadContent", "load");
+	data.append("content_id", contentID);
+	data.append('table_label', editableContent)
+
+	console.log(editableContent)
 
 	let xhr = new XMLHttpRequest();
 
 	xhr.onreadystatechange = function () {
 		if (this.readyState == 4) {
+
 			let jsonData = this.responseText
 			let data = JSON.parse(jsonData)
 
-			getFormData('modalStatus').textContent = 'Update Post'
+			getFormData('modalStatus').textContent = modalHeader
 			getFormData('editorController').textContent = 'Update';
-			getFormData('editorController').value = blog_id;
-			getFormData('editorController').setAttribute('onclick', 'updateBlog(this.value)')
+			getFormData('editorController').value = contentID;
+			getFormData('editorController').setAttribute('onclick', 'updateContent(this)')
+			getFormData('editorController').setAttribute('aria-label', table_label);
 
-			getFormData('blog_title').value = data[0][1];
-			editor.setData(data[0][3]);
-			getFormData('category_name').value = data[0][4];
+			if (editableContent == 'blogs') {
+				getFormData('blog_title').value = data[0][1];
+				editor.setData(data[0][3]);
+				getFormData('category_name').value = data[0][4];
+			}else {
+				getFormData('category_name').value = data[0][1]
+			}
 		}
 	}
 
@@ -161,34 +185,32 @@ function loadBlog(button) {
 
 }
 
-function updateBlog(buttonValue) {
+function updateContent(button) {
 
-	let blog_id = buttonValue
+	let contentID = button.value
+
+	let table_label = button.getAttribute('aria-label')
 
 	let data = new FormData()
 
-	data.append('updateBlog', 'update')
-	data.append('blog_id', blog_id);
-	data.append('blog_title', getFormData('blog_title').value)
-	data.append('category_name', getFormData('category_name').value)
-	data.append('blog_content', editor.getData())
+	data.append('updateContent', 'update');
+	data.append('content_id', contentID);
 
-	let fileInput = getFormData('thumbnail');
-
-	if (fileInput.files.length > 0) {
-
-		let updateImageFile = processImageFileInput(fileInput);
-
-		data.append('blog_thumbnail', updateImageFile[0], updateImageFile[1])
+	if (table_label == 'blogs') {
+		getBlogInput(data);
+	} else {
+		data.append('category_name', getFormData('category_name').value)
 	}
+
+	data.append('table_label', table_label)
 
 	let xhr = new XMLHttpRequest();
 
 	xhr.onreadystatechange = function () {
 		if (this.readyState == 4) {
 			getFormData('confirmMessage').textContent = this.responseText
-			console.log(this.responseText)
 			loadContents();
+			resetForm(table_label);
 		}
 	}
 
@@ -198,6 +220,11 @@ function updateBlog(buttonValue) {
 }
 
 function processImageFileInput(fileInput) {
+
+
+	if (fileInput.files.length === 0) {
+		return null
+	}
 
 	let file = fileInput.files[0]
 
@@ -209,13 +236,26 @@ function processImageFileInput(fileInput) {
 
 }
 
-function resetForm() {
+function resetForm(tbl_label) {
 
 	getFormData('formData').reset();
-	editor.setData('');
 
-	if (getFormData('modalStatus').textContent == 'Update Post') {
-		getFormData('modalStatus').textContent = 'Add Post'
+	if (tbl_label == 'blogs') {
+		editor.setData('');
+	}
+
+	let modalStatus = getFormData('modalStatus')
+
+	console.log(modalStatus.textContent)
+
+	if (modalStatus.textContent == 'Update Blog' || modalStatus.textContent == 'Update Category') {
+
+		if (modalStatus.textContent == 'Update Blog') {
+			modalStatus.textContent = 'Add Post'
+		} else {
+			modalStatus.textContent = 'Add Category'
+		}
+
 		getFormData('editorController').textContent = 'Save';
 		getFormData('editorController').removeAttribute('value')
 		getFormData('editorController').setAttribute('onclick', 'saveData()')
@@ -223,22 +263,25 @@ function resetForm() {
 
 }
 
-function confirmMessage(id) {
+function confirmMessage(button) {
 
-	let toDeleteId = id.split("=")[1];
+	let toDeleteId = button.value;
+	let table_label = button.getAttribute('aria-label');
 
 	let data = new FormData();
 
 	data.append('confirmDelete', 'confirm');
-	data.append('blog_id', toDeleteId);
+	data.append('content_id', toDeleteId);
+	data.append('table_label', table_label);
 
 	let xhr = new XMLHttpRequest()
 
-	xhr.onreadystatechange = function() {
-		if(this.readyState == 4) {
+	xhr.onreadystatechange = function () {
+		if (this.readyState == 4) {
 			let data = JSON.parse(this.responseText)
 
 			getFormData('confirmDeleteButton').setAttribute('value', data[0][0]);
+			getFormData('confirmDeleteButton').setAttribute('aria-label', table_label)
 			getFormData('toDeleteName').textContent = data[0][1];
 		}
 	}
@@ -249,19 +292,22 @@ function confirmMessage(id) {
 
 }
 
-function deleteRecord(id) {
+function deleteRecord(button) {
+
+	let content_id = button.value
+	let table_label = button.getAttribute('aria-label')
 
 	let data = new FormData();
 
 	data.append('finalizeDelete', 'delete')
-	data.append('blog_id', id);
+	data.append('content_id', content_id);
+	data.append('table_label', table_label)
 
-	console.log(id)
 
 	let xhr = new XMLHttpRequest();
 
-	xhr.onreadystatechange = function() {
-		if(this.readyState == 4) {
+	xhr.onreadystatechange = function () {
+		if (this.readyState == 4) {
 			getFormData('confirmMessage').textContent = this.responseText
 			console.log(this.responseText)
 			loadContents();
