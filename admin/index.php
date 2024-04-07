@@ -1,6 +1,14 @@
 <?php
-  // require "../db/action.php";
+  require "../db/action.php";
   include "partials/header.php";
+
+  $data = showRecords($conn, 'tbl_blogs');
+
+  $postCount = count($data);
+
+  $data = showRecords($conn, 'tbl_categories');
+
+  $categoryCount = count($data);
 ?>
 
   <main>
@@ -20,7 +28,7 @@
                   </div>
                 </div>
                 <div class="align-self-center">
-                  <h2 class="h1 mb-0">18,000</h2>
+                  <h2 class="h1 mb-0">0</h2>
                 </div>
               </div>
             </div>
@@ -39,7 +47,7 @@
                   </div>
                 </div>
                 <div class="align-self-center">
-                  <h2 class="h1 mb-0">18,000</h2>
+                  <h2 class="h1 mb-0"><?= $postCount ?></h2>
                 </div>
               </div>
             </div>
@@ -51,14 +59,14 @@
               <div class="d-flex justify-content-between p-md-1">
                 <div class="d-flex flex-row gap-2">
                   <div class="align-self-center">
-                    <img src="../assets/box-archive-solid.svg" alt="">
+                    <img src="../assets/icons-solid.svg" alt="">
                   </div>
                   <div class="">
-                    <h4>Archived Posts</h4>
+                    <h4>Categories</h4>
                   </div>
                 </div>
                 <div class="align-self-center">
-                  <h2 class="h1 mb-0">18,000</h2>
+                  <h2 class="h1 mb-0"><?= $categoryCount ?></h2>
                 </div>
               </div>
             </div>
@@ -67,7 +75,7 @@
 
         <div class="row mt-5 p-3 mb-3 rounded-3" id="graphRow">
           <div class="col-sm-6 mb-5 mb-sm-0">
-            <div class="card text-center">
+            <div class="card text-center chart">
               <div class="card-header">Popular Categories</div>
               <div class="card-body">
                 <canvas id="doughnut"></canvas>
@@ -75,7 +83,7 @@
             </div>
           </div>
           <div class="col-sm-6 mb-5 mb-sm-0">
-            <div class="card text-center">
+            <div class="card text-center chart">
               <div class="card-header">User Registration</div>
               <div class="card-body">
                 <canvas id="bar"></canvas>

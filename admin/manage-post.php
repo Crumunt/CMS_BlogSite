@@ -11,7 +11,7 @@
         <?php include "partials/modal.php"; ?>
       </div>
       <div class="col-lg-4 col-sm-11">
-        <input type="search" name="" id="" placeholder="Search by name or category" class="form-control">
+        <input type="search" name="" id="" placeholder="Search by name or category" class="form-control" aria-label="blogs" onkeyup="searchForm(this)">
       </div>
     </div>
   </div>
@@ -22,26 +22,6 @@
       </div>
     </div>
   </section>
-  
-  <div class="container">
-    <nav aria-label="Page navigation example">
-      <ul class="pagination d-flex justify-content-center">
-        <li class="page-item">
-          <a class="page-link" href="#" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </div>
 </main>
 </body>
 

@@ -14,7 +14,8 @@
 
 body {
     background-color: var(--bg-body) !important;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
+    height: 100svh;
 }
 
 nav,
@@ -50,7 +51,7 @@ nav a {
 
 .card__preview {
     display: -webkit-box !important;
-    -webkit-line-clamp: 4 !important;
+    -webkit-line-clamp: 3 !important;
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
 }

@@ -7,18 +7,9 @@
     <title>The Owl's Lounge</title>
 
     <link rel="stylesheet" href="../css/userStyle.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet">
-
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" /> -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
-    <script src="../bootstrap/js/bootstrap.js"></script>
     <script src="../js/user.js" defer></script>
+
+    <?php include "../includes/font-bootstrap-link.html" ?>
 </head>
 
 <body>
@@ -27,8 +18,11 @@
     <header>
         <nav class="navbar navbar-expand-lg">
             <div class="container">
-                <a class="navbar-brand" href="index.php"><img src="../assets/logo.png" alt="Brand Logo"
-                        class="logo-icon"></a>
+                <a class="navbar-brand d-flex gap-2 align-items-center" href="index.php">
+                    <img src="../assets/logo.png" alt="Brand Logo"
+                        class="logo-icon">
+                    <h3 class="fw-bold">The Owl's Lounge</h3>
+                </a>
                 <button class="navbar-toggler bg-light-subtle" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -43,7 +37,7 @@
                             <a class="nav-link mx-2 fs-5" href="blogs.php">Blogs</a>
                         </li>
                         <li class="nav-item ms-3">
-                            <a class="btn btn-success btn-rounded mt-1 fs-5" href="#!">Log in</a>
+                            <a class="btn btn-success btn-rounded mt-1 fs-5" href="../index.php">Log in</a>
                         </li>
                     </ul>
                 </div>

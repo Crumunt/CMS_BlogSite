@@ -13,12 +13,24 @@
             <?php include "partials/modal.php"; ?>
             
             <div class="col-lg-4 col-sm-11">
-                <input type="search" name="" id="" placeholder="Search by id or name" class="form-control">
+                <input type="search" name="" id="" placeholder="Search by name" class="form-control" onkeyup="searchForm(this)" aria-label="categories">
             </div>
         </div>
 
-        <table class="table table-striped mt-5 text-center" id="contentWrapper" aria-label="Categories">
-            
+        <table class="table table-responsive table-hover table-striped mt-5 text-center" >
+            <thead class="table-dark">
+                <th>#</th>
+                <th>Category Name</th>
+                <th>Actions</th>
+            </thead>
+            <tbody id="contentWrapper" aria-label="Categories">
+
+            </tbody>
+            <tfoot class="table-dark">
+                <th>#</th>
+                <th>Category Name</th>
+                <th>Actions</th>
+            </tfoot>
         </table>
     </div>
 

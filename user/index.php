@@ -1,6 +1,9 @@
 <?php
 include "../db/action.php";
-include "partials/header.html";
+include "partials/header.php";
+
+$carouselData = showRecords($conn, 'tbl_blogs', "id != 0 ORDER BY likes DESC LIMIT 3");
+
 ?>
 
 
@@ -11,30 +14,20 @@ include "partials/header.html";
         <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
     <div class="carousel-inner">
-        <div class="carousel-item c-item active" data-bs-interval="2500">
-            <img src="../assets/pexels-christian-heitz-842711.jpg" class="d-block w-100 carouselImage" alt="...">
-            <div class="carousel-caption top-0 mt-4">
-                <h5 class="text-uppercase fs-3 mt-5">Travel</h5>
-                <p class="display-1 fw-bolder text-capitalize">Enjoy the world</p>
-                <button class="btn btn-primary px-4 py-2 fs 5 mt-5">Read More</button>
+        <?php
+        foreach ($carouselData as $carousel_item) {
+        ?>
+            <div class="carousel-item c-item active" data-bs-interval="2500">
+                <img src="../assets/blog-assets/<?= $carousel_item[2] ?>" class="d-block w-100 carouselImage" alt="...">
+                <div class="carousel-caption top-0 mt-4">
+                    <h5 class="text-uppercase fs-3 mt-5"><?= $carousel_item[4] ?></h5>
+                    <p class="display-4 fw-bolder text-capitalize"><?= $carousel_item[1] ?></p>
+                    <a href="view-blog.php?blog_id=<?= $carousel_item[0] ?>" class="btn btn-primary px-4 py-2 fs-5 mt-5">Read More</a>
+                </div>
             </div>
-        </div>
-        <div class="carousel-item c-item" data-bs-interval="2500">
-            <img src="../assets/pexels-francesco-ungaro-1525041.jpg" class="d-block w-100 carouselImage" alt="...">
-            <div class="carousel-caption top-0 mt-4">
-                <h5 class="text-uppercase fs-3 mt-5">Relax</h5>
-                <p class="display-1 fw-bolder text-capitalize">Feel the moment</p>
-                <button class="btn btn-primary px-4 py-2 fs 5 mt-5">Read More</button>
-            </div>
-        </div>
-        <div class="carousel-item c-item" data-bs-interval="2500">
-            <img src="../assets/pexels-irina-iriser-1379636.jpg" class="d-block w-100 carouselImage" alt="...">
-            <div class="carousel-caption top-0 mt-4">
-                <h5 class="text-uppercase fs-3 mt-5">Discover</h5>
-                <p class="display-1 fw-bolder text-capitalize">Find more about the hidden gems</p>
-                <button class="btn btn-primary px-4 py-2 fs 5 mt-5">Read More</button>
-            </div>
-        </div>
+        <?php
+        }
+        ?>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -60,10 +53,19 @@ include "partials/header.html";
                     <div class="card shadow">
                         <img src="../assets/blog-assets/<?= $latestArticle[2] ?>" alt="" class="card-img-top">
                         <div class="card-body">
-                            <h5 class="card-title"><?= $latestArticle[1] ?></h5>
+                            <h5 class="card-title fw-bold text-truncate"><?= $latestArticle[1] ?></h5>
                             <div class="card-text card__preview mb-2"> <?= nl2br($latestArticle[3]) ?> </div>
-                            <a href="view-blog.php?blog_id=<?=$latestArticle[0]?>" class="btn btn-outline-success btn-md">Read More</a>
-                            <a href="" class="btn btn-outline-danger btn-sm"><span class="material-symbols-outlined d-flex align-items-center">favorite</span></a>
+                            <div class="button-group d-flex gap-2">
+                                <a href="view-blog.php?blog_id=<?= $article[0] ?>" class="btn btn-outline-success btn-md">Read More</a>
+                                <button class="btn btn-outline-danger d-flex align-items-center" id="likeButton" aria-label="<?= $latestArticle[0] ?>">
+                                    <span class="material-symbols-outlined" id="heartIcon">favorite</span>
+                                    <span class="like__label">Like</span>
+                                </button>
+                                <div class="count-group d-flex align-items-center gap-1">
+                                    <p class="like__count fs-6" data-blog-id="<?= $latestArticle[0] ?>"><?= $latestArticle[6] ?></p>
+                                    <span class="fs-6">likes</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -77,8 +79,13 @@ include "partials/header.html";
 <section class="mt-5">
     <div class="row p-5 d-flex justify-content-between align-items-center text-white" id="about">
         <div class="col fs-5">
-            <h5 class="text-center text-uppercase fs-1 mb-3">About</h5>
-            <p class="text-center lh-lg">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptas deleniti, eos hic ab veritatis ipsa doloribus totam quasi aperiam corporis quas ipsam ad itaque id aut ducimus repellat quidem aspernatur laudantium recusandae repudiandae? Perferendis, libero? Incidunt officiis quae velit sequi corporis! Eligendi accusantium quod nam officia quam! Voluptatem, ratione quia. Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima similique expedita soluta earum omnis aliquid asperiores, quisquam repudiandae pariatur accusamus dolore officiis, voluptatum praesentium neque quaerat dolorem? Placeat repudiandae laboriosam possimus consequuntur maxime eum, quod hic natus. Tenetur harum incidunt nostrum laborum magnam delectus, consectetur molestiae aperiam, dolor quibusdam maxime?</p>
+            <h5 class="text-center text-uppercase fs-1 fw-bolder mb-3">About</h5>
+            <p class="text-justify lh-lg text-wrap">
+                Welcome to The Owl's Lounge, a haven for the endlessly curious! We're your nightly companion, illuminating the vast landscape of knowledge with engaging blogs on a breathtaking array of subjects.
+                Think of us as your wise old owl perched atop a branch, observing the world with keen eyes and a thirst for understanding. Here, you'll find yourself peering into every corner of the globe, from the bustling streets of Tokyo to the serene depths of the ocean floor.
+                The Owl's Lounge isn't just a repository of knowledge; it's a vibrant community. We encourage you to interact, share your thoughts, and engage in stimulating discussions with fellow knowledge seekers. After all, learning is most rewarding when it's a shared experience.
+                So, settle in, grab your favorite beverage, and prepare to embark on a journey of exploration with The Owl's Lounge. We'll be your guide, illuminating the way with insightful blogs that will keep you up late, perched on the edge of your seat, eager to discover more.
+            </p>
         </div>
 </section>
 
@@ -89,16 +96,25 @@ include "partials/header.html";
             <?php
             $data = showRecords($conn, 'tbl_blogs');
 
-            foreach (array_slice($data, 0, 6) as $latestArticle) {
+            foreach (array_slice($data, 0, 6) as $article) {
             ?>
                 <div class="col-lg-4 col-md-6 col-sm-10">
                     <div class="card shadow">
-                        <img src="../assets/blog-assets/<?= $latestArticle[2] ?>" alt="" class="card-img-top">
+                        <img src="../assets/blog-assets/<?= $article[2] ?>" alt="" class="card-img-top">
                         <div class="card-body">
-                            <h5 class="card-title text-truncate"><?= $latestArticle[1] ?></h5>
-                            <pre class="card-text card__preview"> <?= $latestArticle[3] ?> </pre>
-                            <a href="view-blog.php" class="btn btn-outline-success btn-md">Read More</a>
-                            <a href="" class="btn btn-outline-danger btn-sm"><span class="material-symbols-outlined d-flex align-items-center">favorite</span></a>
+                            <h5 class="card-title text-truncate fw-bold"><?= $article[1] ?></h5>
+                            <div class="card-text card__preview mb-2"><?= nl2br($article[3]) ?></div>
+                            <div class="button-group d-flex gap-2">
+                                <a href="view-blog.php?blog_id=<?= $article[0] ?>" class="btn btn-outline-success btn-md">Read More</a>
+                                <button class="btn btn-outline-danger d-flex align-items-center" id="likeButton" aria-label="<?= $article[0] ?>">
+                                    <span class="material-symbols-outlined" id="heartIcon">favorite</span>
+                                    <span class="like__label">Like</span>
+                                </button>
+                                <div class="count-group d-flex align-items-center gap-1">
+                                    <p class="like__count fs-6" data-blog-id="<?= $article[0] ?>"><?= $article[6] ?></p>
+                                    <span class="fs-6">likes</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -107,10 +123,10 @@ include "partials/header.html";
             ?>
             <div class="button-wrapper d-flex justify-content-center">
                 <a href="blogs.php">
-                    <button class="btn btn-success mx-auto mt-5 px-5 fs-1">View More</button>
+                    <button class="shadow btn btn-outline-success border-none mx-auto mt-5 px-5 fs-2">View More</button>
                 </a>
             </div>
         </div>
 </section>
 
-<?php include "partials/footer.html"; ?>
+<?php include "partials/footer.php"; ?>

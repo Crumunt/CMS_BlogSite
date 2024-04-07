@@ -5,13 +5,6 @@ const MODAL = document.getElementById('formData')
 if (MODAL.getAttribute('enctype')) {
 
 	MODAL.addEventListener('onload', showEditor())
-
-	const MODAL_CONTROLS = document.querySelectorAll("button[data-bs-dismiss=modal]");
-
-	MODAL_CONTROLS.forEach(control => {
-		control.addEventListener('click', resetForm)
-	})
-
 }
 
 function showEditor() {
@@ -317,5 +310,22 @@ function deleteRecord(button) {
 	xhr.open("POST", "/labFiles/blog_page/formHandlers/adminHandler.php", true);
 
 	xhr.send(data);
+
+}
+
+function searchForm(keyword) {
+
+	let xhr = new XMLHttpRequest();
+
+	xhr.onreadystatechange = function() {
+		if(this.readyState == 4) {
+			// console.log(this.responseText)
+			CONTENT_WRAPPER.innerHTML = this.responseText
+		}
+	}
+
+	xhr.open('GET', '/labFiles/blog_page/formHandlers/adminHandler.php?keyword=' + keyword.value + '&action=' + keyword.getAttribute('aria-label'));
+
+	xhr.send();
 
 }

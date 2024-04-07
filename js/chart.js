@@ -2,6 +2,7 @@ const DOUGNUT_CHART = document.getElementById('doughnut')
 const BAR_GRAPH = document.getElementById('bar')
 
 if (DOUGNUT_CHART !== null && BAR_GRAPH !== null) {
+
     loadGraph()
 }
 
@@ -11,7 +12,7 @@ function loadGraph() {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         datasets: [{
             label: '# of Signups',
-            data: [0, 100],
+            data: [],
             borderWidth: 1
         }]
     }
@@ -21,8 +22,8 @@ function loadGraph() {
         data: {
             labels: ['Music', 'Technology', 'Travel', 'Photography', 'Games', 'Other'],
             datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
+                label: '# of Post',
+                data: [12, 0, 0, 0, 0, 0],
                 borderWidth: 1
             }]
         },

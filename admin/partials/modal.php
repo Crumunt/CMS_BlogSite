@@ -42,7 +42,7 @@ function loadModal($conn)
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="modalStatus">Add Post</h1>
-          <button type="button" class="btn-close modal-button" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="resetForm('blogs')"></button>
         </div>
         <div class="modal-body">
           <form method="POST" enctype="multipart/form-data" id="formData" onsubmit="event.preventDefault()">
@@ -74,8 +74,8 @@ function loadModal($conn)
               </div>
             </div>
             <div class="button-group d-flex gap-2 justify-content-end">
-              <button class="btn btn-warning modal-button" data-bs-dismiss="modal" onclick="resetForm('blogs')">Cancel</button>
-              <button type="submit" class="btn btn-success modal-button" id="editorController" data-bs-toggle="modal" data-bs-target="#confirmationModal" onclick="saveData()" aria-label="blogs">
+              <button class="btn btn-warning" data-bs-dismiss="modal" onclick="resetForm('blogs')">Cancel</button>
+              <button type="submit" class="btn btn-success" id="editorController" data-bs-toggle="modal" data-bs-target="#confirmationModal" onclick="saveData()" aria-label="blogs">
                 Save
               </button>
             </div>

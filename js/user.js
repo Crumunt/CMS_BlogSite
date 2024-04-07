@@ -1,16 +1,100 @@
-const LIKE_BUTTON = document.querySelector('#likeButton')
-const HEART_ICON = document.querySelector('#heartIcon')
-LIKE_BUTTON.addEventListener('click', ()=> {
+const LIKE_BUTTON = document.querySelectorAll('#likeButton')
+const HEART_ICON = document.querySelectorAll('#heartIcon')
+const LIKE_LABEL = document.querySelectorAll('span.like__label');
 
-	if(HEART_ICON.textContent == 'favorite') {
-		HEART_ICON.textContent = 'heart_plus'
-		LIKE_BUTTON.classList.remove('btn-outline-danger')
-		LIKE_BUTTON.classList.add('btn-danger')
-		return
+if (LIKE_BUTTON.length > 0) {
+	LIKE_BUTTON.forEach(button => {
+		button.addEventListener('click', () => {
+
+			console.log(button)
+
+			if (button.childNodes[1].textContent == 'favorite') {
+				button.childNodes[1].textContent = 'heart_plus'
+				button.childNodes[3].textContent = 'Liked'
+				button.classList.remove('btn-outline-danger')
+				button.classList.add('btn-danger')
+				likePost(button.childNodes[3].textContent, button);
+				return
+			}
+
+			button.classList.remove('btn-danger')
+			button.classList.add('btn-outline-danger')
+
+			button.childNodes[1].textContent = 'favorite'
+			button.childNodes[3].textContent = 'Like'
+
+			likePost(button.childNodes[3].textContent, button);
+		})
+	})
+}
+
+
+const CONTENT_WRAPPER = document.getElementById('contentWrapper')
+
+function likePost(likeStatus, button) {
+
+	console.log(likeStatus)
+
+	const LIKE_COUNT = document.querySelector(`p[data-blog-id='${button.getAttribute('aria-label')}']`)
+
+	let data = new FormData();
+
+	data.append('blog_id', button.getAttribute('aria-label'))
+	data.append('like_count', Number(LIKE_COUNT.textContent))
+
+	if (likeStatus == 'Liked') {
+		data.append('updateLike', 'add');
+	} else {
+		data.append('updateLike', 'minus');
 	}
 
-	LIKE_BUTTON.classList.remove('btn-danger')
-	LIKE_BUTTON.classList.add('btn-outline-danger')
 
-	HEART_ICON.textContent = 'favorite'
-})
+
+	let xhr = new XMLHttpRequest();
+
+	xhr.onreadystatechange = function () {
+		if (this.readyState == 4) {
+			// console.log(this.responseText)
+			LIKE_COUNT.textContent = this.responseText;
+		}
+	}
+
+	xhr.open('POST', '/labFiles/blog_page/formHandlers/userHandler.php');
+
+	xhr.send(data);
+
+}
+
+function filterBlogs(option) {
+
+	let xhr = new XMLHttpRequest()
+
+	xhr.onreadystatechange = function () {
+		if (this.readyState == 4) {
+			// console.log(this.responseText)
+			CONTENT_WRAPPER.innerHTML = this.responseText
+		}
+	}
+
+	xhr.open("GET", '/labFiles/blog_page/formHandlers/userHandler.php?filter_type=' + option)
+
+	xhr.send();
+
+}
+
+function searchBlogs(keyword) {
+
+
+	let xhr = new XMLHttpRequest();
+
+	xhr.onreadystatechange = function () {
+		if (this.readyState == 4) {
+			CONTENT_WRAPPER.innerHTML = this.responseText
+		}
+	}
+
+	xhr.open('GET', '/labFiles/blog_page/formHandlers/userHandler.php?keyword=' + keyword)
+
+	xhr.send();
+
+}

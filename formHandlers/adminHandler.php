@@ -22,10 +22,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	}
 }
 
+if($_SERVER["REQUEST_METHOD"] == "GET") {
+	if($_GET['action'] == 'blogs') {
+		generateCards($conn);
+	}elseif($_GET['action'] == 'categories') {
+		loadCategories($conn);
+	}
+}
+
+function getChartData() {
+
+	
+
+}
 
 function generateCards($conn)
 {
-	$data = showRecords($conn, 'tbl_blogs');
+	if($_GET['keyword'] != '') {
+		$data = showRecords($conn, 'tbl_blogs', "blog_title LIKE '%{$_GET['keyword']}%' OR category_name LIKE '%{$_GET['keyword']}%'");
+	}else {
+		$data = showRecords($conn, 'tbl_blogs');
+	}
 
 	if (count($data) > 0) {
 		foreach ($data as $blog_content) {
@@ -35,7 +52,7 @@ function generateCards($conn)
 					<img src="../assets/blog-assets/<?= $blog_content[2] ?>" class="card-img-top" alt="<?= $blog_content[1] ?> Thumbnail" />
 					<div class="card-body">
 						<h5 class="card-title border-bottom text-truncate"><?= $blog_content[1] ?></h5>
-						<p class="card-text text-secondary"><?= $blog_content[4] ?> &bullet; </p>
+						<p class="card-text text-secondary"><?= $blog_content[4] ?> &bullet; <?=date("M. d, Y", strtotime($blog_content[5]))?></p>
 						<button class="btn btn-warning" value="<?= $blog_content[0] ?>" onclick="loadContent(this)" aria-label="blogs" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 							Edit
 						</button>
@@ -130,40 +147,23 @@ function processImage()
 	}
 }
 
-function addCategory($conn)
-{
-
-	$category = $_POST['category_name'] ?? NULL;
-
-	if ($category == NULL) {
-		echo "Invalid input.";
-		exit();
-	}
-
-	try {
-		$checkDuplication = showRecords($conn, 'tbl_categories', "category_name = '$category'");
-
-		if ($checkDuplication) {
-			echo "error";
-			exit();
-		}
-
-		addQuery($conn, ['category_name' => $category], 'tbl_categories');
-	} catch (Exception $e) {
-		echo "Error: " . $e;
-		exit();
-	}
-}
-
 function loadCategories($conn)
 {
 
-	$data = showRecords($conn, 'tbl_categories');
+	if($_GET['keyword'] != '') {
+		$data = showRecords($conn, 'tbl_categories', "category_name LIKE '%{$_GET['keyword']}%'");
+	}else {
+		$data = showRecords($conn, 'tbl_categories');
+	}
+
+	
 
 	if (count($data) > 0) {
+		$count = 1;
 		foreach ($data as $category) {
 		?>
 			<tr>
+				<th class="text-center"><?= $count++ ?></th>
 				<th><?= $category[1] ?></th>
 				<td>
 					<button class="btn btn-warning" value="<?= $category[0] ?>" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="loadContent(this)" aria-label="categories">Edit</button>

@@ -12,21 +12,15 @@ $activePage = basename($_SERVER["PHP_SELF"], ".php");
 
     <!-- CSS -->
     <link rel="stylesheet" href="../css/adminStyle.css">
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
 
-    <!-- GOOGLE FONTS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
-    <!-- JS -->
-    <script src="../bootstrap/js/bootstrap.bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/chart.js" defer></script>
     <script src="../js/admin.js" defer></script>
     
     <!-- CKEDITOR CDN -->
     <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/decoupled-document/ckeditor.js"></script>
+
+    <?php include "../includes/font-bootstrap-link.html" ?>
 </head>
 
 <body>

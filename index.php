@@ -22,7 +22,7 @@
 				</div>
 				<div class="button-group d-grid gap-2">
 					<button type="submit" class="btn" style="background-color: #988F88;">Login</button>
-					<button class="btn text-white" style="background-color: #30393E;">Go Back</button>
+					<a href="user/" class="btn text-white" style="background-color: #30393E;">Go Back</a>
 				</div>
 			</form>
 		</div>
