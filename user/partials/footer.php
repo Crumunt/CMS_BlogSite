@@ -1,20 +1,20 @@
 <footer class="mt-5">
-  <form class="w-50 mx-auto text-white p-3">
+  <form class="w-50 mx-auto text-white p-3" id="messageForm" onsubmit="event.preventDefault()">
     <!-- Email input -->
     <div class="form-outline mb-4 mt-5">
-      <h5 class="text-center mb-3">Got Concerns? Send us an email</h5>
-      <label class="form-label" for="form6Example5">Email</label>
-      <input type="email" id="form6Example5" class="form-control" />
+      <h5 class="text-center text-uppercase fw-bold mb-3">Got Concerns? Send us a message</h5>
+      <label class="form-label" for="form6Example5">Concern</label>
+      <input type="text" id="concernHeader" class="form-control" required />
     </div>
 
     <!-- Message input -->
     <div class="form-outline mb-4">
       <label class="form-label" for="form6Example7">Additional information</label>
-      <textarea class="form-control" id="form6Example7" rows="4"></textarea>
+      <textarea class="form-control" id="additionalInformation" rows="4"></textarea>
     </div>
 
     <!-- Submit button -->
-    <button type="submit" class="btn btn-primary btn-block mb-4 w-100">
+    <button class="btn btn-success btn-block mb-4 w-100" onclick="sendMessage()" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
       Send Message
     </button>
   </form>
@@ -24,11 +24,30 @@
       © <?= date("Y") ?> Copyright
     </div>
     <div class="social-wrapper d-flex gap-3">
-      <img height="50px" src="../assets/facebook.svg" alt="">
-      <img height="50px" src="../assets/github.svg" alt="">
-      <img height="50px" src="../assets/x-twitter.svg" alt="">
+      <a href="https://www.facebook.com" target="_blank">
+        <img height="50px" src="../assets/facebook.svg" alt="Facebook Icon">
+      </a>
+      <a href="https://github.com" target="_blank"><img height="50px" src="../assets/github.svg" alt="Github Icon"></a>
+      <a href="https://twitter.com" target="_blank"><img height="50px" src="../assets/x-twitter.svg" alt="Twitter Icon"></a>
     </div>
   </section>
+
+  <!-- MODAL -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalStatus" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" id="messageModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="concernMessage text-center text-uppercase text-success fw-bold"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal"">Okay</button>
+      </div>
+    </div>
+  </div>
+  </div>
 </footer>
 
 

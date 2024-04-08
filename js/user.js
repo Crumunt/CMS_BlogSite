@@ -33,8 +33,6 @@ const CONTENT_WRAPPER = document.getElementById('contentWrapper')
 
 function likePost(likeStatus, button) {
 
-	console.log(likeStatus)
-
 	const LIKE_COUNT = document.querySelector(`p[data-blog-id='${button.getAttribute('aria-label')}']`)
 
 	let data = new FormData();
@@ -54,7 +52,7 @@ function likePost(likeStatus, button) {
 
 	xhr.onreadystatechange = function () {
 		if (this.readyState == 4) {
-			// console.log(this.responseText)
+			console.log(this.responseText)
 			LIKE_COUNT.textContent = this.responseText;
 		}
 	}
@@ -71,7 +69,6 @@ function filterBlogs(option) {
 
 	xhr.onreadystatechange = function () {
 		if (this.readyState == 4) {
-			// console.log(this.responseText)
 			CONTENT_WRAPPER.innerHTML = this.responseText
 		}
 	}
@@ -96,5 +93,35 @@ function searchBlogs(keyword) {
 	xhr.open('GET', '/labFiles/blog_page/formHandlers/userHandler.php?keyword=' + keyword)
 
 	xhr.send();
+
+}
+
+function sendMessage() {
+
+	const form = document.getElementById('messageForm')
+	const concernMessage = document.querySelector('.concernMessage')
+	const MODAL = document.getElementById('staticBackdrop')
+	
+	let data = new FormData();
+
+	const concernHeader = document.getElementById('concernHeader').value
+	const concernBody = document.getElementById('additionalInformation').value
+
+	data.append('sendMessage', 'send');
+	data.append('concern_header', concernHeader)
+	data.append('concern_body', concernBody)
+
+	let xhr = new XMLHttpRequest()
+
+	xhr.onreadystatechange = function() {
+		if(this.readyState == 4) {
+			concernMessage.textContent = this.responseText
+			form.reset();
+		}
+	}
+
+	xhr.open('POST', '/labFiles/blog_page/formHandlers/userHandler.php')
+
+	xhr.send(data)
 
 }

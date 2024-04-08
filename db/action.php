@@ -90,3 +90,27 @@ function deleteQuery($conn, $tbl, $id)
 
     return mysqli_query($conn, $sql);
 }
+
+function retrieveCount($conn, $data = NULL, $tbl, $where = NULL, $group) {
+
+    $sql = "SELECT COUNT(*)";
+
+    if($data != NULL) {
+        foreach($data as $param) {
+            $sql .= ", $param";
+        }
+    }
+
+    $sql .= " FROM $tbl";
+
+    if($where != NULL) {
+        $sql .= " WHERE $where";
+    }
+
+    $sql .= " GROUP BY $group";
+
+    // echo "$sql";
+
+    return sqlExecute($conn, $sql);
+   
+}

@@ -16,7 +16,7 @@ $activePage = basename($_SERVER["PHP_SELF"], ".php");
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/chart.js" defer></script>
     <script src="../js/admin.js" defer></script>
-    
+
     <!-- CKEDITOR CDN -->
     <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/decoupled-document/ckeditor.js"></script>
 
@@ -53,6 +53,9 @@ $activePage = basename($_SERVER["PHP_SELF"], ".php");
                             </li>
                             <li class="nav-item">
                                 <a href="manage-messages.php" class="nav-link text-white fs-3 <?= ($activePage == 'manage-messages') ? "active" : "" ?>" aria-current="page">Messages</a>
+                            </li>
+                            <li class="nav-item mt-5">
+                                <a href="../formHandlers/logout.php" class="w-100 btn btn-danger text-white fs-3" aria-current="page">Logout</a>
                             </li>
                         </ul>
                     </div>

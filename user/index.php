@@ -1,6 +1,16 @@
 <?php
+
 include "../db/action.php";
 include "partials/header.php";
+
+session_start();
+
+$adminID = $_SESSION['adminID'] ?? NULL;
+
+if($adminID != NULL) {
+    header("location: ../admin/index.php");
+    exit();
+}
 
 $carouselData = showRecords($conn, 'tbl_blogs', "id != 0 ORDER BY likes DESC LIMIT 3");
 
@@ -94,7 +104,7 @@ $carouselData = showRecords($conn, 'tbl_blogs', "id != 0 ORDER BY likes DESC LIM
     <div class="container py-3">
         <div class="row g-4 d-flex justify-content-center">
             <?php
-            $data = showRecords($conn, 'tbl_blogs');
+            $data = showRecords($conn, 'tbl_blogs', "id != 0 ORDER BY RAND()");
 
             foreach (array_slice($data, 0, 6) as $article) {
             ?>

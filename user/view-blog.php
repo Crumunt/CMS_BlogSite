@@ -2,6 +2,15 @@
 require "../db/action.php";
 include "partials/header.php";
 
+session_start();
+
+$adminID = $_SESSION['adminID'] ?? NULL;
+
+if ($adminID != NULL) {
+	header("location: ../admin/index.php");
+	exit();
+}
+
 $blog_id = $_GET['blog_id'] ?? NULL;
 
 if ($blog_id == NULL) {

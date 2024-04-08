@@ -1,4 +1,15 @@
-<?php include "partials/header.php"; ?>
+<?php
+include "partials/header.php";
+
+session_start();
+
+$adminID = $_SESSION['adminID'] ?? NULL;
+
+if ($adminID == NULL) {
+    header("location: ../index.php");
+    exit();
+}
+?>
 
 <main>
 
@@ -11,13 +22,13 @@
             </div>
 
             <?php include "partials/modal.php"; ?>
-            
+
             <div class="col-lg-4 col-sm-11">
                 <input type="search" name="" id="" placeholder="Search by name" class="form-control" onkeyup="searchForm(this)" aria-label="categories">
             </div>
         </div>
 
-        <table class="table table-responsive table-hover table-striped mt-5 text-center" >
+        <table class="table table-responsive table-hover table-striped mt-5 text-center">
             <thead class="table-dark">
                 <th>#</th>
                 <th>Category Name</th>

@@ -1,6 +1,16 @@
 <?php
-  require "../db/action.php";
-  include "partials/header.php";
+require "../db/action.php";
+include "partials/header.php";
+
+session_start();
+
+$adminID = $_SESSION['adminID'] ?? NULL;
+
+if ($adminID == NULL) {
+  header("location: ../index.php");
+  exit();
+}
+
 ?>
 <main>
   <div class="container mb-5">

@@ -11,6 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		uploadContent($conn);
 	} elseif (isset($_POST['loadCategories'])) {
 		loadCategories($conn);
+	} elseif (isset($_POST['loadMessages'])) {
+		loadMessages($conn);
 	} elseif (isset($_POST['loadContent'])) {
 		loadContent($conn);
 	} elseif (isset($_POST['updateContent'])) {
@@ -22,25 +24,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	}
 }
 
-if($_SERVER["REQUEST_METHOD"] == "GET") {
-	if($_GET['action'] == 'blogs') {
-		generateCards($conn);
-	}elseif($_GET['action'] == 'categories') {
-		loadCategories($conn);
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+	if ($_GET['search']) {
+		switch ($_GET['search']) {
+			case 'blogs':
+				generateCards($conn);
+				break;
+			case 'categories':
+				loadCategories($conn);
+				break;
+			case 'messages':
+				loadMessages($conn);
+				break;
+		}
+	} elseif ($_GET['keyword']) {
+		checkDuplication($conn);
+	} elseif ($_GET['graphData']) {
+		loadGraph($conn);
 	}
 }
 
-function getChartData() {
+function loadGraph($conn)
+{
 
-	
+	try {
+		$data = retrieveCount($conn, ['category_name'], 'tbl_blogs', "category_name != ''", 'category_name');
+	} catch (Exception $e) {
+		echo "ERROR: " . $e;
+	}
 
+	foreach ($data as $chartData) {
+		$count[] = $chartData[0];
+		$label[] = $chartData[1];
+	}
+
+	echo json_encode([$count, $label]);
+}
+
+function checkDuplication($conn)
+{
+
+	$keyword = $_GET['keyword'];
+
+	$tbl = $_GET['tbl_action'];
+
+	if ($tbl == 'blogs') {
+		$data = showRecords($conn, 'tbl_blogs', "blog_title LIKE '%$keyword%'");
+	} else {
+		$data = showRecords($conn, 'tbl_categories', "category_name LIKE '%$keyword%'");
+	}
+
+	if ($data) echo "error";
 }
 
 function generateCards($conn)
 {
-	if($_GET['keyword'] != '') {
+	if ($_GET['keyword'] != '') {
 		$data = showRecords($conn, 'tbl_blogs', "blog_title LIKE '%{$_GET['keyword']}%' OR category_name LIKE '%{$_GET['keyword']}%'");
-	}else {
+	} else {
 		$data = showRecords($conn, 'tbl_blogs');
 	}
 
@@ -52,7 +93,7 @@ function generateCards($conn)
 					<img src="../assets/blog-assets/<?= $blog_content[2] ?>" class="card-img-top" alt="<?= $blog_content[1] ?> Thumbnail" />
 					<div class="card-body">
 						<h5 class="card-title border-bottom text-truncate"><?= $blog_content[1] ?></h5>
-						<p class="card-text text-secondary"><?= $blog_content[4] ?> &bullet; <?=date("M. d, Y", strtotime($blog_content[5]))?></p>
+						<p class="card-text text-secondary"><?= $blog_content[4] ?> &bullet; <?= date("M. d, Y", strtotime($blog_content[5])) ?></p>
 						<button class="btn btn-warning" value="<?= $blog_content[0] ?>" onclick="loadContent(this)" aria-label="blogs" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 							Edit
 						</button>
@@ -93,22 +134,22 @@ function uploadContent($conn)
 
 	try {
 		$action = addQuery($conn, $data, $table);
-
-		if ($action) {
-
-			if ($_POST['table_label'] == 'blogs') {
-				echo "Blog has been added successfully";
-			} else {
-				echo "Category has been added successfully";
-			}
-
-			exit();
-		} else {
-			echo "There was an error uploading the blog, please try again.";
-			exit();
-		}
 	} catch (Exception $e) {
 		echo "Error: " . $e;
+	}
+
+	if ($action) {
+
+		if ($_POST['table_label'] == 'blogs') {
+			echo "Blog has been added successfully";
+		} else {
+			echo "Category has been added successfully";
+		}
+
+		exit();
+	} else {
+		echo "There was an error uploading the blog, please try again.";
+		exit();
 	}
 }
 
@@ -150,13 +191,13 @@ function processImage()
 function loadCategories($conn)
 {
 
-	if($_GET['keyword'] != '') {
+	if ($_GET['keyword'] != '') {
 		$data = showRecords($conn, 'tbl_categories', "category_name LIKE '%{$_GET['keyword']}%'");
-	}else {
+	} else {
 		$data = showRecords($conn, 'tbl_categories');
 	}
 
-	
+
 
 	if (count($data) > 0) {
 		$count = 1;
@@ -171,7 +212,7 @@ function loadCategories($conn)
 				</td>
 			</tr>
 
-<?php
+		<?php
 		}
 	} else {
 		echo "No data found";
@@ -203,7 +244,7 @@ function updateContent($conn)
 
 	$content_id = $_POST['content_id'];
 
-	$flagNames = ['updateContent','content_id', 'blog_thumbnail', 'table_label'];
+	$flagNames = ['updateContent', 'content_id', 'blog_thumbnail', 'table_label'];
 
 	$replaceNames = ['blog_content', 'blog_title', 'category_name'];
 
@@ -247,4 +288,30 @@ function deleteContent($conn)
 	}
 
 	echo "Content has been successfully deleted";
+}
+
+function loadMessages($conn)
+{
+	if ($_GET['keyword'] != '') {
+		$data = showRecords($conn, 'tbl_messages', "concern_header LIKE '%{$_GET['keyword']}%'");
+	} else {
+		$data = showRecords($conn, 'tbl_messages');
+	}
+
+	foreach ($data as $concern) {
+		$date = strtotime($concern[3]);
+		?>
+		<div class="card text-center col-lg-4 col-md-6 col-sm-10" style="width: 18rem;">
+			<div class="card-body">
+				<h5 class="card-title">Message #<?= $concern[0] ?></h5>
+				<h6 class="card-subtitle mb-2 text-muted"><?= $concern[1] ?></h6>
+				<p class="card-text"><?= date("M. d, Y", $date) ?></p>
+				<button class="btn btn-success mb-1" onclick="loadContent(this)" data-bs-toggle="modal" data-bs-target="#staticBackdrop" value="<?= $concern[0] ?>" aria-label="messages">
+					View Message
+				</button>
+				<button class="btn btn-danger" value="<?= $concern[0] ?>" onclick="confirmMessage(this)" aria-label="messages" data-bs-toggle="modal" data-bs-target="#confirmDelete">Delete Message</button>
+			</div>
+		</div>
+<?php
+	}
 }

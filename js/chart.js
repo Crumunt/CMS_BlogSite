@@ -3,30 +3,37 @@ const BAR_GRAPH = document.getElementById('bar')
 
 if (DOUGNUT_CHART !== null && BAR_GRAPH !== null) {
 
-    loadGraph()
+    let data;
+
+    let xhr = new XMLHttpRequest()
+
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4) {
+            let data = JSON.parse(this.responseText)
+            loadGraph(data)
+        }
+    }
+
+    xhr.open("GET", "/labFiles/blog_page/formHandlers/adminHandler.php?graphData=fetch");
+    xhr.send()
 }
 
 
-function loadGraph() {
-    const data = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+function loadGraph(graphData) {
+
+    const doughnutData = {
+        labels: graphData[1],
         datasets: [{
-            label: '# of Signups',
-            data: [],
+            label: '# of Posts',
+            data: graphData[0],
             borderWidth: 1
         }]
     }
 
+
     new Chart(DOUGNUT_CHART, {
         type: 'doughnut',
-        data: {
-            labels: ['Music', 'Technology', 'Travel', 'Photography', 'Games', 'Other'],
-            datasets: [{
-                label: '# of Post',
-                data: [12, 0, 0, 0, 0, 0],
-                borderWidth: 1
-            }]
-        },
+        data: doughnutData,
         options: {
             scales: {
                 y: {
@@ -36,10 +43,18 @@ function loadGraph() {
         }
     });
 
+    const barData = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        datasets: [{
+            label: '# of Signups',
+            data: [],
+            borderWidth: 1
+        }]
+    }
 
     new Chart(BAR_GRAPH, {
         type: 'bar',
-        data: data,
+        data: barData,
         options: {
             scales: {
                 y: {

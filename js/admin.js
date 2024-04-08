@@ -27,13 +27,13 @@ function showEditor() {
 		});
 }
 
-const CONTENT_WRAPPER = document.getElementById('contentWrapper')
-
-if (CONTENT_WRAPPER) CONTENT_WRAPPER.onload = loadContents()
+window.onload = loadContents()
 
 function loadContents() {
 
-	let contentToBeLoaded = CONTENT_WRAPPER.getAttribute('aria-label')
+	let contentWrapper = document.getElementById('contentWrapper')
+
+	let contentToBeLoaded = contentWrapper.getAttribute('aria-label')
 
 	let data = new FormData();
 	data.append(`load${contentToBeLoaded}`, 'load')
@@ -52,6 +52,30 @@ function getFormData(id) {
 	return document.getElementById(id);
 }
 
+function checkDuplication(form) {
+
+	let keyword = form.value
+	let tbl = form.getAttribute('data-label')
+
+	let xhr = new XMLHttpRequest()
+
+	xhr.onreadystatechange = function () {
+		if (this.readyState == 4) {
+			if (this.responseText == "error") {
+				form.classList.add('is-invalid')
+			} else {
+				form.classList.remove('is-invalid')
+			}
+
+			console.log(this.responseText)
+		}
+	}
+
+	xhr.open('GET', '/labFiles/blog_page/formHandlers/adminHandler.php?keyword=' + keyword + '&tbl_action=' + tbl)
+
+	xhr.send()
+}
+
 function saveData() {
 
 	// instantiate new FormData to store key value pairs
@@ -62,8 +86,14 @@ function saveData() {
 	data.append('uploadContent', 'saveData');
 
 	if (tbl_label == 'blogs') {
-		getBlogInput(data)
+		let status = getBlogInput(data)
+
+		if(status == 1) return
 	} else {
+		if(getFormData('category_name').value == '') {
+			getFormData('confirmMessage').textContent = 'Something went wrong'
+			return
+		}
 		data.append('category_name', getFormData('category_name').value);
 	}
 
@@ -76,17 +106,7 @@ function saveData() {
 	xhr.onreadystatechange = function () {
 		if (this.readyState == 4) {
 
-			if (tbl_label == 'categories') {
-				if (this.responseText == 'error') {
-					getFormData('category_name').classList.add('is-invalid')
-					return;
-				}
-
-				getFormData('category_name').classList.remove('is-invalid')
-			}
-
 			resetForm(tbl_label)
-
 			loadContents();
 			getFormData('confirmMessage').textContent = this.responseText;
 
@@ -102,6 +122,10 @@ function saveData() {
 }
 
 function getBlogInput(data) {
+
+	if(getFormData('blog_title').value == '') {
+		return 1;
+	}
 
 	// process file input and return relevant information such as the object and its details
 	let processedImageFile = processImageFileInput(getFormData('thumbnail'))
@@ -156,18 +180,24 @@ function loadContent(button) {
 			let jsonData = this.responseText
 			let data = JSON.parse(jsonData)
 
-			getFormData('modalStatus').textContent = modalHeader
-			getFormData('editorController').textContent = 'Update';
-			getFormData('editorController').value = contentID;
-			getFormData('editorController').setAttribute('onclick', 'updateContent(this)')
-			getFormData('editorController').setAttribute('aria-label', table_label);
+			if (editableContent != 'messages') {
+				getFormData('modalStatus').textContent = modalHeader
+				getFormData('editorController').textContent = 'Update';
+				getFormData('editorController').value = contentID;
+				getFormData('editorController').setAttribute('onclick', 'updateContent(this)')
+				getFormData('editorController').setAttribute('aria-label', table_label);
+			}
 
 			if (editableContent == 'blogs') {
 				getFormData('blog_title').value = data[0][1];
 				editor.setData(data[0][3]);
 				getFormData('category_name').value = data[0][4];
-			}else {
+			} else if (editableContent == 'categories') {
 				getFormData('category_name').value = data[0][1]
+			} else {
+				getFormData('messageHeader').textContent = data[0][0];
+				getFormData('concernHeader').textContent = data[0][1]
+				getFormData('concernBody').textContent = data[0][2]
 			}
 		}
 	}
@@ -315,16 +345,18 @@ function deleteRecord(button) {
 
 function searchForm(keyword) {
 
+	const content_wrapper = document.getElementById('contentWrapper')
+
 	let xhr = new XMLHttpRequest();
 
-	xhr.onreadystatechange = function() {
-		if(this.readyState == 4) {
+	xhr.onreadystatechange = function () {
+		if (this.readyState == 4) {
 			// console.log(this.responseText)
-			CONTENT_WRAPPER.innerHTML = this.responseText
+			content_wrapper.innerHTML = this.responseText
 		}
 	}
 
-	xhr.open('GET', '/labFiles/blog_page/formHandlers/adminHandler.php?keyword=' + keyword.value + '&action=' + keyword.getAttribute('aria-label'));
+	xhr.open('GET', '/labFiles/blog_page/formHandlers/adminHandler.php?keyword=' + keyword.value + '&search=' + keyword.getAttribute('aria-label'));
 
 	xhr.send();
 

@@ -48,7 +48,10 @@ function loadModal($conn)
           <form method="POST" enctype="multipart/form-data" id="formData" onsubmit="event.preventDefault()">
             <div class="form-group mb-3">
               <label for="" class="form-label">Title</label>
-              <input type="text" class="form-control" id="blog_title" placeholder="Enter title" required>
+              <input type="text" class="form-control" id="blog_title" placeholder="Enter title" required onkeyup="checkDuplication(this)" data-label="blogs">
+              <div class="invalid-feedback">
+                Blog has already been added.
+              </div>
             </div>
             <div class="form-group mb-3" id="thumbnailForm">
               <label for="" class="form-label">Thumbnail</label>
@@ -75,7 +78,7 @@ function loadModal($conn)
             </div>
             <div class="button-group d-flex gap-2 justify-content-end">
               <button class="btn btn-warning" data-bs-dismiss="modal" onclick="resetForm('blogs')">Cancel</button>
-              <button type="submit" class="btn btn-success" id="editorController" data-bs-toggle="modal" data-bs-target="#confirmationModal" onclick="saveData()" aria-label="blogs">
+              <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmationModal" id="editorController" onclick="saveData()" aria-label="blogs">
                 Save
               </button>
             </div>
@@ -86,7 +89,7 @@ function loadModal($conn)
   <?php
   } elseif ($page == 'manage-categories') {
   ?>
-    <div class="modal-dialog" id="categoryModal">
+    <div class="modal-dialog modal-dialog-centered" id="categoryModal">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="modalStatus">Add category</h1>
@@ -96,7 +99,7 @@ function loadModal($conn)
           <form action="" method="post" id="formData" onsubmit="event.preventDefault()">
             <div class="form-group mb-3">
               <label for="" class="form-label">Category Name</label>
-              <input type="text" name="category_name" id="category_name" class="form-control">
+              <input type="text" name="category_name" id="category_name" class="form-control" onkeyup="checkDuplication(this)" data-label="categories">
               <div class="invalid-feedback">
                 Category has already been added.
               </div>
@@ -105,10 +108,27 @@ function loadModal($conn)
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="resetForm('categories')">Cancel</button>
-          <button type="button" class="btn btn-success" id="editorController" onclick="saveData()"
-           data-bs-toggle="modal" data-bs-target="#confirmationModal" aria-label="categories">
-           Save
+          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmationModal" id="editorController" onclick="saveData()" aria-label="categories">
+            Save
           </button>
+        </div>
+      </div>
+    </div>
+  <?php
+  } else {
+  ?>
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Message #<span id="messageHeader"></span></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-center fs-2 border-bottom" id="concernHeader"></p>
+          <p class="messageBody p-2" id="concernBody"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
