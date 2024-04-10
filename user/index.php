@@ -66,7 +66,7 @@ $carouselData = showRecords($conn, 'tbl_blogs', "id != 0 ORDER BY likes DESC LIM
                             <h5 class="card-title fw-bold text-truncate"><?= $latestArticle[1] ?></h5>
                             <div class="card-text card__preview mb-2"> <?= nl2br($latestArticle[3]) ?> </div>
                             <div class="button-group d-flex gap-2">
-                                <a href="view-blog.php?blog_id=<?= $article[0] ?>" class="btn btn-outline-success btn-md">Read More</a>
+                                <a href="view-blog.php?blog_id=<?= $latestArticle[0] ?>" class="btn btn-outline-success btn-md">Read More</a>
                                 <button class="btn btn-outline-danger d-flex align-items-center" id="likeButton" aria-label="<?= $latestArticle[0] ?>">
                                     <span class="material-symbols-outlined" id="heartIcon">favorite</span>
                                     <span class="like__label">Like</span>
