@@ -57,14 +57,18 @@ function checkDuplication(form) {
 	let keyword = form.value
 	let tbl = form.getAttribute('data-label')
 
+	let button = document.getElementById('editorController');
+
 	let xhr = new XMLHttpRequest()
 
 	xhr.onreadystatechange = function () {
 		if (this.readyState == 4) {
 			if (this.responseText == "error") {
 				form.classList.add('is-invalid')
+				button.setAttribute('disabled', '');
 			} else {
 				form.classList.remove('is-invalid')
+				button.removeAttribute('disabled')
 			}
 
 			console.log(this.responseText)
