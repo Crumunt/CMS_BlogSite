@@ -20,7 +20,7 @@ $activePage = basename($_SERVER["PHP_SELF"], ".php");
     <!-- CKEDITOR CDN -->
     <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/decoupled-document/ckeditor.js"></script>
 
-    <?php include "../includes/font-bootstrap-link.html" ?>
+    <?php include "../includes/font-bootstrap-link.php" ?>
 </head>
 
 <body>

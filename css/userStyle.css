@@ -8,10 +8,6 @@
     --bg-card-view: #F8E5D7;
 }
 
-* {
-    /* font-family: 'Poppins', sans-serif; */
-}
-
 body {
     background-color: var(--bg-body) !important;
     /* overflow-x: hidden; */
@@ -92,6 +88,10 @@ img {
     max-height: 550px !important;
 }
 
+h1,h2,h3 {
+    font-weight: 600 !important;
+}
+
 figure.image {
     width: 100% !important;
 }
@@ -109,4 +109,10 @@ blockquote {
 footer img {
     background-color: whitesmoke !important;
     border-radius: 50% !important;
+}
+
+@media screen and (width <= 914px ) {
+    figure.image > img {
+        max-height: 300px !important;
+    }
 }

@@ -4,7 +4,7 @@
     <div class="form-outline mb-4 mt-5">
       <h5 class="text-center text-uppercase fw-bold mb-3">Got Concerns? Send us a message</h5>
       <label class="form-label" for="form6Example5">Concern</label>
-      <input type="text" id="concernHeader" class="form-control" required />
+      <input type="text" id="concernHeader" onkeyup="checkMessageInput(this.value)" class="form-control" required />
     </div>
 
     <!-- Message input -->
@@ -14,7 +14,7 @@
     </div>
 
     <!-- Submit button -->
-    <button class="btn btn-success btn-block mb-4 w-100" onclick="sendMessage()" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    <button class="btn btn-success btn-block mb-4 w-100" id="sendMessageButton" disabled onclick="sendMessage()" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
       Send Message
     </button>
   </form>
@@ -25,10 +25,10 @@
     </div>
     <div class="social-wrapper d-flex gap-3">
       <a href="https://www.facebook.com" target="_blank">
-        <img height="50px" src="../assets/facebook.svg" alt="Facebook Icon">
+        <img height="50px" src="<?= ($page == 'index') ? '' : '../' ?>assets/facebook.svg" alt="Facebook Icon">
       </a>
-      <a href="https://github.com" target="_blank"><img height="50px" src="../assets/github.svg" alt="Github Icon"></a>
-      <a href="https://twitter.com" target="_blank"><img height="50px" src="../assets/x-twitter.svg" alt="Twitter Icon"></a>
+      <a href="https://github.com" target="_blank"><img height="50px" src="<?= ($page == 'index') ? '' : '../' ?>assets/github.svg" alt="Github Icon"></a>
+      <a href="https://twitter.com" target="_blank"><img height="50px" src="<?= ($page == 'index') ? '' : '../' ?>assets/x-twitter.svg" alt="Twitter Icon"></a>
     </div>
   </section>
 

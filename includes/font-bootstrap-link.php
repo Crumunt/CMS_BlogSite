@@ -7,5 +7,5 @@
 <!-- <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" /> -->
 <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-<link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
-<script src="../bootstrap/js/bootstrap.js"></script>
+<link rel="stylesheet" href="<?= ($page == 'index') ? '':'../' ?>bootstrap/css/bootstrap.css">
+<script src="<?= ($page == 'index') ? '':'../' ?>bootstrap/js/bootstrap.js"></script>

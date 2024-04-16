@@ -46,8 +46,6 @@ function likePost(likeStatus, button) {
 		data.append('updateLike', 'minus');
 	}
 
-
-
 	let xhr = new XMLHttpRequest();
 
 	xhr.onreadystatechange = function () {
@@ -101,7 +99,7 @@ function sendMessage() {
 	const form = document.getElementById('messageForm')
 	const concernMessage = document.querySelector('.concernMessage')
 	const MODAL = document.getElementById('staticBackdrop')
-	
+
 	let data = new FormData();
 
 	const concernHeader = document.getElementById('concernHeader').value
@@ -123,5 +121,18 @@ function sendMessage() {
 	xhr.open('POST', '/labFiles/blog_page/formHandlers/userHandler.php')
 
 	xhr.send(data)
+
+}
+
+function checkMessageInput(concern) {
+
+	// const concern = document.getElementById('concernHeader').value
+	const button = document.getElementById('sendMessageButton')
+
+	if(concern == '') {
+		button.setAttribute('disabled', '');
+	}else {
+		button.removeAttribute('disabled');
+	}
 
 }
